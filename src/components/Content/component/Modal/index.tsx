@@ -67,7 +67,7 @@ const EditFieldModal: React.FC<EditModalProps> = ({
               <Form.Label>Field Label</Form.Label>
               <Form.Control
                 type="text"
-                value={currentField.label}
+                value={currentField?.label}
                 onChange={(e) => handleInputChange("label", e.target.value)}
               />
             </Form.Group>
@@ -77,7 +77,7 @@ const EditFieldModal: React.FC<EditModalProps> = ({
               <Form.Check
                 type="checkbox"
                 label="Required"
-                checked={currentField.required || false}
+                checked={currentField?.required || false}
                 onChange={(e) =>
                   handleInputChange("required", e.target.checked)
                 }
@@ -86,10 +86,10 @@ const EditFieldModal: React.FC<EditModalProps> = ({
 
             {/* Edit Field Value */}
             <Form.Group className="mb-3">
-              {currentField.type === "radio" ? (
+              {currentField?.type === "radio" ? (
                 <>
-                  <Form.Label>{currentField.label}</Form.Label>
-                  {(currentField.options || []).map((option) => (
+                  <Form.Label>{currentField?.label}</Form.Label>
+                  {(currentField?.options || []).map((option) => (
                     <div
                       key={option}
                       className="d-flex align-items-center mb-2"
@@ -97,9 +97,9 @@ const EditFieldModal: React.FC<EditModalProps> = ({
                       <Form.Check
                         type="radio"
                         label={option}
-                        name={currentField.id}
+                        name={currentField?.id}
                         value={option}
-                        checked={currentField.value === option}
+                        checked={currentField?.value === option}
                         onChange={(e) =>
                           handleInputChange("value", e.target.value)
                         }
@@ -131,20 +131,20 @@ const EditFieldModal: React.FC<EditModalProps> = ({
                     </Button>
                   </div>
                 </>
-              ) : currentField.type === "checkbox" ? (
+              ) : currentField?.type === "checkbox" ? (
                 <Form.Check
                   type="checkbox"
-                  label={currentField.label}
-                  checked={currentField.value as boolean}
+                  label={currentField?.label}
+                  checked={currentField?.value as boolean}
                   onChange={(e) => handleInputChange("value", e.target.checked)}
                 />
-              ) : currentField.type === "select" ? (
+              ) : currentField?.type === "select" ? (
                 <>
                   <Form.Select
                     value={currentField.value as string}
                     onChange={(e) => handleInputChange("value", e.target.value)}
                   >
-                    <option value="">Select {currentField.label}</option>
+                    <option value="">Select {currentField?.label}</option>
                     {(currentField.options || []).map((option) => (
                       <option value={option} key={option}>
                         {option}
