@@ -2,8 +2,8 @@ import React from "react";
 import { FormData } from "../../pages/mainPage";
 import { MdOutlineFormatAlignLeft } from "react-icons/md";
 import { Stack } from "react-bootstrap";
-import styles from "./styles.module.scss";
 import FormBuilderCard from "./component/card";
+import styles from "./styles.module.scss";
 
 const Sidebar: React.FC<{
   fields: FormData[];
@@ -18,7 +18,9 @@ const Sidebar: React.FC<{
       <Stack gap={2}>
         {fields.map((field) => (
           <div key={field.id} onClick={() => onAddField(field)}>
-            <FormBuilderCard padding="sm">{field.label}</FormBuilderCard>
+            <FormBuilderCard variant="outline" padding="sm">
+              {field.label}
+            </FormBuilderCard>
           </div>
         ))}
       </Stack>

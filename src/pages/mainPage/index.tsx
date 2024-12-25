@@ -46,6 +46,7 @@ const availableFields: FormData[] = [
     label: "Gender",
     value: "",
     options: ["Male", "Female"],
+    required: true,
   },
   {
     formId: "",
@@ -53,6 +54,7 @@ const availableFields: FormData[] = [
     type: "checkbox",
     label: "Subscribe to newsletter",
     value: false,
+    required: true,
   },
   {
     formId: "",
@@ -67,6 +69,7 @@ const availableFields: FormData[] = [
     id: "role",
     type: "select",
     label: "Role",
+    required: true,
     value: "",
     options: ["Admin", "Editor", "Viewer"],
   },

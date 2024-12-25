@@ -3,6 +3,15 @@ import { useForm, Controller } from "react-hook-form";
 import { FormData } from "../../pages/mainPage";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import styles from "./styles.module.scss";
+import {
+  Button,
+  FormCheck,
+  FormControl,
+  FormLabel,
+  FormSelect,
+  Stack,
+} from "react-bootstrap";
 
 // Zod Validation Schema
 const createZodSchema = (fields: FormData[]) => {
@@ -46,10 +55,9 @@ const FormBuilder: React.FC<{ fields: FormData[] }> = ({ fields }) => {
   const { control, handleSubmit } = useForm<any>({
     resolver: zodResolver(dynamicSchema), // Pass the dynamically created Zod schema
   });
-  console.log(fields);
   // Handle form submission
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
+  const onSubmit = (data: FormData) => {
+    alert(`Form submission: ${JSON.stringify(data, null, 2)}`);
   };
 
   // Function to render form fields based on type
@@ -67,9 +75,9 @@ const FormBuilder: React.FC<{ fields: FormData[] }> = ({ fields }) => {
               defaultValue={field.value}
               render={({ field: controlField, fieldState: { error } }) => (
                 <>
-                  <input {...controlField} type={field.type} />
+                  <FormControl {...controlField} type={field.type} />
                   {error && (
-                    <span style={{ color: "black" }}>{error.message}</span>
+                    <span style={{ color: "red" }}>{error.message}</span>
                   )}
                 </>
               )}
@@ -79,8 +87,13 @@ const FormBuilder: React.FC<{ fields: FormData[] }> = ({ fields }) => {
 
       case "radio":
         return (
-          <div key={field.id}>
-            <label>{field.label}</label>
+          <Stack
+            key={field.id}
+            direction="horizontal"
+            gap={2}
+            className="align-items-center"
+          >
+            <FormLabel className="m-0">{field.label}</FormLabel>
             {field.options?.map((option, index) => (
               <label key={index}>
                 <Controller
@@ -88,8 +101,8 @@ const FormBuilder: React.FC<{ fields: FormData[] }> = ({ fields }) => {
                   control={control}
                   defaultValue={field.value}
                   render={({ field: controlField, fieldState: { error } }) => (
-                    <>
-                      <input
+                    <Stack direction="horizontal" gap={2}>
+                      <FormCheck
                         {...controlField}
                         type="radio"
                         value={option}
@@ -97,40 +110,40 @@ const FormBuilder: React.FC<{ fields: FormData[] }> = ({ fields }) => {
                       />
                       {option}
                       {error && (
-                        <span style={{ color: "black" }}>{error.message}</span>
+                        <span style={{ color: "red" }}>{error.message}</span>
                       )}
-                    </>
+                    </Stack>
                   )}
                 />
               </label>
             ))}
-          </div>
+          </Stack>
         );
 
       case "checkbox":
         return (
           <div key={field.id}>
-            <label>
-              <Controller
-                name={field.id}
-                control={control}
-                defaultValue={field.value || false}
-                render={({ field: controlField, fieldState: { error } }) => (
-                  <>
-                    <input
+            <Controller
+              name={field.id}
+              control={control}
+              defaultValue={field.value || false}
+              render={({ field: controlField, fieldState: { error } }) => (
+                <>
+                  <Stack direction="horizontal" gap={2}>
+                    <FormCheck
                       {...controlField}
                       type="checkbox"
                       checked={controlField.value}
                       onChange={(e) => controlField.onChange(e.target.checked)}
                     />
                     {field.label}
-                    {error && (
-                      <span style={{ color: "black" }}>{error.message}</span>
-                    )}
-                  </>
-                )}
-              />
-            </label>
+                  </Stack>
+                  {error && (
+                    <span style={{ color: "red" }}>{error.message}</span>
+                  )}
+                </>
+              )}
+            />
           </div>
         );
 
@@ -144,16 +157,16 @@ const FormBuilder: React.FC<{ fields: FormData[] }> = ({ fields }) => {
               defaultValue={field.value}
               render={({ field: controlField, fieldState: { error } }) => (
                 <>
-                  <select {...controlField}>
+                  <FormSelect {...controlField}>
                     <option value="">Select {field.label}</option>
                     {field.options?.map((option, index) => (
                       <option key={index} value={option}>
                         {option}
                       </option>
                     ))}
-                  </select>
+                  </FormSelect>
                   {error && (
-                    <span style={{ color: "black" }}>{error.message}</span>
+                    <span style={{ color: "red" }}>{error.message}</span>
                   )}
                 </>
               )}
@@ -167,12 +180,21 @@ const FormBuilder: React.FC<{ fields: FormData[] }> = ({ fields }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {fields.map(renderField)}
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <Stack className={styles.form}>
+      <h2>Form</h2>
+      {fields.length > 0 ? (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack gap={2}>{fields.map(renderField)}</Stack>
+          <Button className="mt-3" type="submit">
+            Submit
+          </Button>
+        </form>
+      ) : (
+        <div className="h-100 d-flex align-items-center justify-content-center">
+          <h3>No Available Form</h3>
+        </div>
+      )}
+    </Stack>
   );
 };
 

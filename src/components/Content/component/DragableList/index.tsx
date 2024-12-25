@@ -2,13 +2,15 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { MdOutlineDragIndicator, MdOutlineDeleteForever } from "react-icons/md";
-("");
+import { FaEdit } from "react-icons/fa";
+import { Stack } from "react-bootstrap";
 
 const DraggableListItem: React.FC<{
   id: string;
   label: string;
   onRemoveField: (id: string) => void;
-}> = ({ id, label, onRemoveField }) => {
+  onEditField: (id: string) => void;
+}> = ({ id, label, onRemoveField, onEditField }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id,
@@ -30,9 +32,12 @@ const DraggableListItem: React.FC<{
   };
 
   // Prevent drag behavior on mouse down when clicking remove button
-  const handleRemoveClick = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent drag behavior from being triggered on button click
+  const handleRemoveClick = () => {
     onRemoveField(id); // Call the remove handler
+  };
+
+  const handleEditClick = () => {
+    onEditField(id); // Call the remove handler
   };
 
   return (
@@ -45,16 +50,28 @@ const DraggableListItem: React.FC<{
         <MdOutlineDragIndicator />
         {label}
       </span>
-      <button
-        onClick={handleRemoveClick} // Ensure remove function works
-        style={{
-          color: "#f44336",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        <MdOutlineDeleteForever />
-      </button>
+      <Stack direction="horizontal">
+        <button
+          onClick={handleEditClick} // Ensure remove function works
+          style={{
+            color: "#0d6efd",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          <FaEdit />
+        </button>
+        <button
+          onClick={handleRemoveClick} // Ensure remove function works
+          style={{
+            color: "#f44336",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          <MdOutlineDeleteForever />
+        </button>
+      </Stack>
     </li>
   );
 };

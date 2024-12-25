@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { DndContext } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -9,12 +9,15 @@ import { closestCenter } from "@dnd-kit/core";
 import DraggableListItem from "./component/DragableList";
 import { FormData } from "../../pages/mainPage";
 import { Stack } from "react-bootstrap";
+import EditFieldModal from "./component/Modal";
 
 const SelectedFieldsList: React.FC<{
   fields: FormData[];
   onRemoveField: (id: string) => void;
   onReorderFields: (updatedFields: FormData[]) => void;
 }> = ({ fields, onRemoveField, onReorderFields }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [editField, setEditField] = useState<FormData>();
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
@@ -25,8 +28,14 @@ const SelectedFieldsList: React.FC<{
     }
   };
 
+  const handleEditField = (id: string) => {
+    const field = fields.find((f) => f.formId === id);
+    setEditField(field);
+    setShowModal(true);
+  };
+
   return (
-    <Stack className="p-2">
+    <Stack className="p-3">
       <h2 className="mb-3">Selected Fields</h2>
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
@@ -43,12 +52,25 @@ const SelectedFieldsList: React.FC<{
                   id={field.formId}
                   label={field.label}
                   onRemoveField={onRemoveField}
+                  onEditField={handleEditField}
                 />
               ))}
             </ul>
           )}
         </SortableContext>
       </DndContext>
+      <EditFieldModal
+        field={editField as FormData}
+        handleSave={(data) => {
+          const updatedData = fields.map((field) =>
+            field.formId === data.formId ? { ...data } : field
+          );
+          console.log(data, updatedData, "ASd");
+          onReorderFields(updatedData);
+        }}
+        showModal={showModal}
+        setShowModal={(flag) => setShowModal(flag)}
+      />
     </Stack>
   );
 };
